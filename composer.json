@@ -1,0 +1,28 @@
+{
+    "name": "etki/composer-opencart-installer",
+    "description": "Composer installer for opencart",
+    "type": "composer-plugin",
+    "authors": [
+        {
+            "name": "Fike Etki",
+            "email": "etki@etki.name",
+            "homepage": "http://etki.name",
+            "role": "Developer"
+        }
+    ],
+    "license": "MIT",
+    "version": "0.1.0",
+    "keywords": ["installer", "opencart"],
+    "autoload": {
+        "psr-4": {"Etki\\Composer\\Installers\\Opencart\\": "src/"}
+    },
+    "extra": {
+        "class": "Etki\\Composer\\Installers\\Opencart\\Plugin"
+    },
+    "require": {
+        "composer-plugin-api": "1.0.0"
+    },
+    "require-dev": {
+        "codeception/codeception": "dev-master"
+    }
+}
