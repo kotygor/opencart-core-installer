@@ -30,8 +30,13 @@ class Installer extends LibraryInstaller
     }
     public function getPackageBasePath(PackageInterface $package)
     {
-        var_dump($this->composer->getPackage()->getExtra());
-        die;
+        $extra = $this->composer->getPackage()->getExtra();
+        if (!isset($extra['opencart-install-path'])) {
+            throw new \InvalidArgumentException(
+                'Extra section didn\'t provide `opencart-install-path` option'
+            );
+        }
+        return $extra['opencart-install-path'];
     }
     /*public function isInstalled(
         InstalledRepositoryInterface $repo,
