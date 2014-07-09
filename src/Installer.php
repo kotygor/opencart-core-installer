@@ -33,7 +33,7 @@ class Installer extends LibraryInstaller
         var_dump($package->getExtra());
         die;
     }
-    public function isInstalled(
+    /*public function isInstalled(
         InstalledRepositoryInterface $repo,
         PackageInterface $package
     ) {
@@ -61,6 +61,6 @@ class Installer extends LibraryInstaller
     public function getInstallPath(PackageInterface $package)
     {
 
-    }
+    }*/
 }
  
