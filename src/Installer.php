@@ -30,7 +30,7 @@ class Installer extends LibraryInstaller
     }
     public function getPackageBasePath(PackageInterface $package)
     {
-        var_dump($this->composer->getPackage->getExtra());
+        var_dump($this->composer->getPackage()->getExtra());
         die;
     }
     /*public function isInstalled(
