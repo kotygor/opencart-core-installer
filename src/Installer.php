@@ -43,13 +43,28 @@ class Installer extends LibraryInstaller
         PackageInterface $package
     ) {
 
-    }
+    }*/
     public function install(
         InstalledRepositoryInterface $repo,
         PackageInterface $package
     ) {
+        parent::install($repo, $package);
+        $path = $this->getPackageBasePath($package);
+        $tmpDir = dirname($path).'/opencart-tmp';
+        $extra = $package->getExtra();
 
+        // Come on, what the heck is this? Use filesystem ffs. It's not 123 A.D.
+        rename($path, $tmpDir);
+        rename($tmpDir.'/upload', $path);
+        foreach (scandir($tmpDir) as $file) {
+            if ($file === '.' || $file === '..') {
+                continue;
+            }
+            unlink($tmpDir.'/'.$file);
+        }
+        rmdir($tmpDir);
     }
+    /*
     public function update(
         InstalledRepositoryInterface $repo,
         PackageInterface $initial,
