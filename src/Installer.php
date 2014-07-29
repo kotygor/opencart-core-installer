@@ -3,6 +3,7 @@ namespace Etki\Composer\Installers\Opencart;
 
 use Composer\Package\PackageInterface;
 use Composer\Installer\LibraryInstaller;
+use Composer\Repository\InstalledRepositoryInterface;
 
 /**
  * 
@@ -14,6 +15,12 @@ use Composer\Installer\LibraryInstaller;
  */
 class Installer extends LibraryInstaller
 {
+    /**
+     * Supported package type.
+     *
+     * @type string
+     * @since 0.1.0
+     */
     public $packageType = 'opencart-base';
 
     /**
@@ -28,6 +35,15 @@ class Installer extends LibraryInstaller
     {
         return $packageType === $this->packageType;
     }
+
+    /**
+     *
+     *
+     * @param PackageInterface $package
+     *
+     * @return string
+     * @since 0.1.0
+     */
     public function getPackageBasePath(PackageInterface $package)
     {
         $extra = $this->composer->getPackage()->getExtra();
