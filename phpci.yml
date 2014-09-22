@@ -1,0 +1,25 @@
+build_settings:
+  ignore:
+    - vendor
+    - tests
+
+setup:
+  composer:
+    action: install
+
+test:
+  php_parallel_lint:
+    directory: src
+  php_loc:
+    directory: src
+  php_docblock_checker:
+    path: src
+  php_code_sniffer:
+    path: src
+    standard: "PSR1,PSR2"
+  php_mess_detector:
+    path: src
+  pdepend:
+    directory: src
+  codeception:
+    config: codeception.yml
