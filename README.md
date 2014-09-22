@@ -1,6 +1,7 @@
 # Opencart installer
 
 Oh hi.
+
 This is a simple composer plugin that allows to install opencart in a custom
 directory.
 
@@ -52,5 +53,6 @@ The last step is to specify install directory in `extra` section:
 ```
 
 Now Opencart source code will be placed in `src/public` folder. Hooray!
+
 *Note: if you omit `opencart-install-dir` extra option, installer will use
 `opencart` folder as a default.*
