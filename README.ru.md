@@ -36,7 +36,7 @@ Opencart пока еще недоступен на packagist (а еще инст
 
 ```js
 "require": {
-    "etki/opencart-installer": "~0.1",
+    "etki/opencart-core-installer": "~0.1",
     "opencart/opencart": "1.5.6.3"
 }
 ```

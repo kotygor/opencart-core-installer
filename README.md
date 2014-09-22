@@ -36,7 +36,7 @@ After that you have to require it alongside with `etki/opencart-core-installer`:
 
 ```js
 "require": {
-    "etki/opencart-installer": "~0.1",
+    "etki/opencart-core-installer": "~0.1",
     "opencart/opencart": "1.5.6.3"
 }
 ```
