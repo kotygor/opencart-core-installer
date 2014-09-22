@@ -1,0 +1,34 @@
+{
+    "name": "etki/test-opencart-installation",
+    "minimum-stability": "stable",
+    "repositories": [
+        {
+            "type": "package",
+            "package": {
+                "name": "opencart/opencart",
+                "type": "opencart-core",
+                "version": "%opencart-version%",
+                "dist": {
+                    "url": "https://github.com/opencart/opencart/archive/%opencart-version%.zip",
+                    "type": "zip"
+                },
+                "source": {
+                    "url": "https://github.com/opencart/opencart",
+                    "type": "git",
+                    "reference": "%opencart-version%"
+                }
+            }
+        },
+        {
+            "type": "vcs",
+            "url": "%repo-path%"
+        }
+    ],
+    "require": {
+        "etki/opencart-installer": "@dev",
+        "opencart/opencart": "%opencart-version%"
+    },
+    "extra": {
+        "opencart-install-dir": "%install-dir%"
+    }
+}
