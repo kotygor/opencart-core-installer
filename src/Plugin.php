@@ -7,7 +7,7 @@ use Composer\Plugin\PluginInterface;
 use Composer\Installer\InstallationManager;
 
 /**
- * 
+ * Plugin that hooks up installer.
  *
  * @version 0.1.0
  * @since   0.1.0
@@ -33,4 +33,3 @@ class Plugin implements PluginInterface
         $manager->addInstaller($installer);
     }
 }
- 
