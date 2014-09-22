@@ -12,7 +12,7 @@
     ],
     "support": {
         "issues": "https://github.com/etki/opencart-core-installer/issues",
-        "source": "https://github.com/etki/opencart-core-installer"
+        "source": "https://github.com/etki/opencart-core-installer.git"
     },
     "license": "MIT",
     "version": "0.1.0",
