@@ -10,6 +10,10 @@
             "role": "Developer"
         }
     ],
+    "support": {
+        "issues": "https://github.com/etki/opencart-core-installer/issues",
+        "source": "https://github.com/etki/opencart-core-installer"
+    },
     "license": "MIT",
     "version": "0.1.0",
     "keywords": ["installer", "opencart"],
