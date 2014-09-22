@@ -3,10 +3,9 @@ namespace Etki\Composer\Installers\Opencart;
 
 use Composer\Package\PackageInterface;
 use Composer\Installer\LibraryInstaller;
-use Composer\Repository\InstalledRepositoryInterface;
 
 /**
- * 
+ * Just an opencart installer, nothing to see here, move along.
  *
  * @version 0.1.0
  * @since   0.1.0
@@ -21,7 +20,15 @@ class Installer extends LibraryInstaller
      * @type string
      * @since 0.1.0
      */
-    public $packageType = 'opencart-base';
+    public $packageType = 'opencart-core';
+
+    /**
+     * Default installation directory.
+     *
+     * @type string
+     * @since 0.1.0
+     */
+    public $defaultInstallDir = 'opencart';
 
     /**
      * Tells composer if this installer supports provided package type.
@@ -37,66 +44,36 @@ class Installer extends LibraryInstaller
     }
 
     /**
+     * Provides installation path for package. Kudos go to
+     * https://github.com/johnpbloch/wordpress-core-installer
      *
-     *
-     * @param PackageInterface $package
+     * @param PackageInterface $package Installed package.
      *
      * @return string
      * @since 0.1.0
      */
-    public function getPackageBasePath(PackageInterface $package)
-    {
-        $extra = $this->composer->getPackage()->getExtra();
-        if (!isset($extra['opencart-install-path'])) {
-            throw new \InvalidArgumentException(
-                'Extra section didn\'t provide `opencart-install-path` option'
-            );
-        }
-        return $extra['opencart-install-path'];
-    }
-    /*public function isInstalled(
-        InstalledRepositoryInterface $repo,
-        PackageInterface $package
-    ) {
-
-    }*/
-    public function install(
-        InstalledRepositoryInterface $repo,
-        PackageInterface $package
-    ) {
-        parent::install($repo, $package);
-        $path = $this->getPackageBasePath($package);
-        $tmpDir = dirname($path).'/opencart-tmp';
-        $extra = $package->getExtra();
-
-        // Come on, what the heck is this? Use filesystem ffs. It's not 123 A.D.
-        rename($path, $tmpDir);
-        rename($tmpDir.'/upload', $path);
-        foreach (scandir($tmpDir) as $file) {
-            if ($file === '.' || $file === '..') {
-                continue;
-            }
-            unlink($tmpDir.'/'.$file);
-        }
-        rmdir($tmpDir);
-    }
-    /*
-    public function update(
-        InstalledRepositoryInterface $repo,
-        PackageInterface $initial,
-        PackageInterface $target
-    ) {
-
-    }
-    public function uninstall(
-        InstalledRepositoryInterface $repo,
-        PackageInterface $package
-    ) {
-
-    }
     public function getInstallPath(PackageInterface $package)
     {
-
-    }*/
+        $installDir = null;
+        if ($this->composer->getPackage()) {
+            $rootExtra = $this->composer->getPackage()->getExtra();
+            if (!empty($rootExtra['opencart-install-dir'])) {
+                $installDir = $rootExtra['opencart-install-dir'];
+            }
+        }
+        if (!$installDir) {
+            $extra = $package->getExtra();
+            if (!empty($extra['opencart-install-dir'])) {
+                $installDir = $extra['opencart-install-dir'];
+            }
+        }
+        if (is_array($installDir)) {
+            $prettyName = $package->getPrettyName();
+            if (isset($installDir[$prettyName])) {
+                return $installDir[$prettyName];
+            }
+            return $this->defaultInstallDir;
+        }
+        return $installDir ? $installDir : $this->defaultInstallDir;
+    }
 }
- 
