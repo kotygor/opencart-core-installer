@@ -3,6 +3,10 @@
     "minimum-stability": "stable",
     "repositories": [
         {
+            "type": "vcs",
+            "url": "%repo-path%"
+        },
+        {
             "type": "package",
             "package": {
                 "name": "opencart/opencart",
@@ -18,10 +22,6 @@
                     "reference": "%opencart-version%"
                 }
             }
-        },
-        {
-            "type": "vcs",
-            "url": "%repo-path%"
         }
     ],
     "require": {
