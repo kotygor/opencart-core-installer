@@ -43,6 +43,10 @@ class Installer extends LibraryInstaller
      */
     public function supports($packageType)
     {
+        $this->writeDebugMessage(
+            'Checking support for package type `%s` (%s)',
+            array($packageType, $packageType === $this->packageType ? 'y' : 'n')
+        );
         return $packageType === $this->packageType;
     }
 
@@ -58,6 +62,10 @@ class Installer extends LibraryInstaller
     public function getInstallPath(PackageInterface $package)
     {
         $prettyName = $package->getPrettyName();
+        $this->writeDebugMessage(
+            'Getting install path for `%s` package',
+            array($prettyName,)
+        );
         $installDir = null;
         if ($this->composer->getPackage()) {
             $rootExtra = $this->composer->getPackage()->getExtra();
@@ -77,7 +85,12 @@ class Installer extends LibraryInstaller
             }
             return $this->defaultInstallDir;
         }
-        return $installDir ? $installDir : $this->defaultInstallDir;
+        $installDir = $installDir ? $installDir : $this->defaultInstallDir;
+        $this->writeDebugMessage(
+            'Computed install dir for package `%s`: `%s`',
+            array($prettyName, $installDir,)
+        );
+        return $installDir;
     }
 
     /**
@@ -91,10 +104,20 @@ class Installer extends LibraryInstaller
     protected function rotateFiles($installPath)
     {
         $parentDir = dirname($installPath);
+        $this->writeDebugMessage('Rotating files in `%s`', array($parentDir));
         $tempDir = $parentDir . DIRECTORY_SEPARATOR . 'tmp-oi-' . md5(time());
         $uploadDir = $tempDir . DIRECTORY_SEPARATOR . 'upload';
+        $this->writeDebugMessage(
+            'Moving files from `%s` to `%s`',
+            array($installPath, $tempDir,)
+        );
         $this->filesystem->rename($installPath, $tempDir);
+        $this->writeDebugMessage(
+            'Moving files from `%s` to `%s`',
+            array($uploadDir, $installPath,)
+        );
         $this->filesystem->rename($uploadDir, $installPath);
+        $this->writeDebugMessage('Removing `%s`', array($tempDir,));
         $this->filesystem->remove($tempDir);
     }
 
@@ -111,8 +134,15 @@ class Installer extends LibraryInstaller
         InstalledRepositoryInterface $repo,
         PackageInterface $package
     ) {
+        $installPath = $this->getInstallPath($package);
+        $this->writeDebugMessage(
+            'Installing package `%s` to %s',
+            array($package->getPrettyName(), $installPath,)
+        );
         parent::install($repo, $package);
-        $this->rotateFiles($this->getInstallPath($package));
+        $this->writeDebugMessage('Post-install file rotating');
+        $this->rotateFiles($installPath);
+        $this->writeDebugMessage('Finished installation');
     }
 
     /**
@@ -130,7 +160,33 @@ class Installer extends LibraryInstaller
         PackageInterface $initial,
         PackageInterface $target
     ) {
+        $this->writeDebugMessage('Updating package');
         parent::update($repo, $initial, $target);
+        $this->writeDebugMessage('Post-update file rotate');
         $this->rotateFiles($this->getInstallPath($target));
+        $this->writeDebugMessage('Finished updating');
+    }
+
+    /**
+     * Writes debug message to stdout.
+     *
+     * @param string            $message Message to be shown.
+     * @param array|string|null $args    Additional arguments for message
+     *                                   formatting.
+     *
+     * @return void
+     * @since 0.1.0
+     */
+    protected function writeDebugMessage($message, $args = null)
+    {
+        if (getenv('DEBUG') || getenv('OPENCART_INSTALLER_DEBUG')) {
+            if ($args) {
+                if (!is_array($args)) {
+                    $args = array($args);
+                }
+                $message = vsprintf($message, $args);
+            }
+            $this->io->write('OpencartInstaller: ' . $message);
+        }
     }
 }
