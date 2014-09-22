@@ -1,6 +1,6 @@
 {
-    "name": "etki/composer-opencart-installer",
-    "description": "Composer installer for opencart",
+    "name": "etki/opencart-installer",
+    "description": "Composer installer for Opencart",
     "type": "composer-plugin",
     "authors": [
         {
