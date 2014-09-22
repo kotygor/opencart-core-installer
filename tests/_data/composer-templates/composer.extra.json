@@ -25,7 +25,7 @@
         }
     ],
     "require": {
-        "etki/opencart-installer": "@dev",
+        "etki/opencart-core-installer": "@dev",
         "opencart/opencart": "%opencart-version%"
     },
     "extra": {
