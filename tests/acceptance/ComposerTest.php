@@ -12,6 +12,8 @@ use Symfony\Component\Filesystem\Filesystem;
  */
 class ComposerTest extends \Codeception\TestCase\Test
 {
+    // helpers
+
     /**
      * List of created dir paths.
      *
@@ -101,40 +103,56 @@ class ComposerTest extends \Codeception\TestCase\Test
         return $exitCode;
     }
 
+    // data providers
+
+    /**
+     * Provides installation test with config template key and Opencart
+     * installation directory.
+     *
+     * @return array List of template key and installation directory sets.
+     * @since 0.1.0
+     */
+    public function installationDataProvider()
+    {
+        return array(
+            array('extra', 'opencart-install-dir',), // installDir specified
+            array('no-extra', 'opencart',), // installDir not specified
+        );
+    }
+
     // tests
 
     /**
      * Tests installation.
      *
+     * @param string $key        `composer.json` template key.
+     * @param string $installDir Opencart installation directory (relative).
+     *
+     * @dataProvider installationDataProvider
+     *
      * @return void
      * @since 0.1.0
      */
-    public function testInstallation()
+    public function testInstallation($key, $installDir)
     {
-        $fsm = new \Symfony\Component\Filesystem\Filesystem();
-        $defs = array(
-            'extra' => 'opencart-install-dir',
-            'no-extra' => 'opencart',
-        );
         $scenario = array(
             array('version' => '1.5.6.3', 'action' => 'install'),
             array('version' => '1.5.6.4', 'action' => 'update'),
             array('version' => '1.5.6.3', 'action' => 'update'),
         );
+        $fsm = new \Symfony\Component\Filesystem\Filesystem();
         $pluginPath = $this->getPackageRoot();
-        foreach ($defs as $type => $installDir) {
-            $tempDir = $this->issueTempDirectory();
-            $fsm->mkdir($tempDir);
-            $config = new ComposerConfig($type, $this->getTemplateDir());
-            foreach ($scenario as $step) {
-                $version = $step['version'];
-                $action = $step['action'];
-                $config->write($tempDir, $version, $installDir, $pluginPath);
-                $this->assertSame(0, $this->execute($action, $tempDir));
-                $this->checkIndex($tempDir . '/' . $installDir, $version);
-            }
-            $fsm->remove($tempDir);
+        $tempDir = $this->issueTempDirectory();
+        $fsm->mkdir($tempDir);
+        $config = new ComposerConfig($key, $this->getTemplateDir());
+        foreach ($scenario as $step) {
+            $version = $step['version'];
+            $action = $step['action'];
+            $config->write($tempDir, $version, $installDir, $pluginPath);
+            $this->assertSame(0, $this->execute($action, $tempDir));
+            $this->checkIndex($tempDir . '/' . $installDir, $version);
         }
+        $fsm->remove($tempDir);
     }
 
     /**

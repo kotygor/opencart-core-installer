@@ -3,8 +3,29 @@
     "minimum-stability": "stable",
     "repositories": [
         {
-            "type": "vcs",
-            "url": "%repo-path%"
+            "type": "package",
+            "package": {
+                "name": "etki/opencart-core-installer",
+                "type": "composer-plugin",
+                "version": "0.1.x-dev",
+                "source": {
+                    "url": "%repo-path%",
+                    "type": "git",
+                    "reference": "0.1.x-dev"
+                },
+                "autoload": {
+                    "psr-4": {"Etki\\Composer\\Installers\\Opencart\\": "src/"}
+                },
+                "extra": {
+                    "class": "Etki\\Composer\\Installers\\Opencart\\Plugin"
+                },
+                "require": {
+                    "php": ">=5.3.0",
+                    "composer-plugin-api": "1.0.0",
+                    "symfony/console": "~2.5",
+                    "symfony/filesystem": "~2.5"
+                }
+            }
         },
         {
             "type": "package",
@@ -25,7 +46,7 @@
         }
     ],
     "require": {
-        "etki/opencart-core-installer": "@dev",
+        "etki/opencart-core-installer": "dev-master",
         "opencart/opencart": "%opencart-version%"
     }
 }
