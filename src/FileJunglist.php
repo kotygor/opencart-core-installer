@@ -43,7 +43,7 @@ class FileJunglist
     protected $modifiableFiles = array(
         'config.php',
         'admin/config.php',
-        'images',
+        'image',
         'system/logs',
         'system/download',
     );

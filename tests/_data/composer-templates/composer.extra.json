@@ -7,11 +7,11 @@
             "package": {
                 "name": "etki/opencart-core-installer",
                 "type": "composer-plugin",
-                "version": "dev-sandbox",
+                "version": "dev-master",
                 "source": {
                     "url": "%repo-path%",
                     "type": "git",
-                    "reference": "sandbox"
+                    "reference": "master"
                 },
                 "autoload": {
                     "psr-4": {"Etki\\Composer\\Installers\\Opencart\\": "src/"}
@@ -46,7 +46,7 @@
         }
     ],
     "require": {
-        "etki/opencart-core-installer": "dev-sandbox",
+        "etki/opencart-core-installer": "dev-master",
         "opencart/opencart": "%opencart-version%"
     },
     "extra": {
