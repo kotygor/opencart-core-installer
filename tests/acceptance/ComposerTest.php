@@ -1,7 +1,10 @@
 <?php
 
-use Etki\Composer\Installers\Opencart\Tests\Support\ComposerConfig;
+namespace Etki\Composer\Installers\Opencart\Tests\Acceptance;
+
+use Etki\Composer\Installers\Opencart\Tests\Support\ComposerProject;
 use Symfony\Component\Filesystem\Filesystem;
+use Codeception\Module\FilesystemHelper;
 
 /**
  * Tests composer installation using the most recent master-branch commit.
@@ -12,28 +15,22 @@ use Symfony\Component\Filesystem\Filesystem;
  */
 class ComposerTest extends \Codeception\TestCase\Test
 {
-    // helpers
-
     /**
-     * List of created dir paths.
+     * Actor.
+     *
+     * @type \AcceptanceTester
+     * @since 0.1.0
+     */
+    protected $tester;
+    /**
+     * List of directories to after test has been run.
      *
      * @type string[]
      * @since 0.1.0
      */
-    protected static $dirs = array();
+    protected static $keptDirs = array();
 
-    /**
-     * Creates temporary directory and returns it's path.
-     *
-     * @return string
-     * @since 0.1.0
-     */
-    protected static function issueTempDirectory()
-    {
-        $dir = sys_get_temp_dir() . '/' . uniqid('oi-test-', true);
-        static::$dirs[] = $dir;
-        return $dir;
-    }
+    // helpers
 
     /**
      * Cleanup.
@@ -43,64 +40,8 @@ class ComposerTest extends \Codeception\TestCase\Test
      */
     public static function tearDownAfterClass()
     {
-        $fsm = new Filesystem();
-        foreach (static::$dirs as $dir) {
-            $fsm->remove($dir);
-        }
-    }
-
-    /**
-     * Returns path of the package root.
-     *
-     * @return string
-     * @since 0.1.0
-     */
-    protected function getPackageRoot()
-    {
-        return dirname(dirname(__DIR__));
-    }
-
-    /**
-     * Returns path to composer executable.
-     *
-     * @return string
-     * @since 0.1.0
-     */
-    protected function getComposerExecutable()
-    {
-        return $this->getPackageRoot() . '/vendor/bin/composer';
-    }
-
-    /**
-     * Returns path to `composer.json` templates directory.
-     *
-     * @return string
-     * @since 0.1.0
-     */
-    protected function getTemplateDir()
-    {
-        return $this->getPackageRoot() . '/tests/_data/composer-templates';
-    }
-
-    /**
-     * Executes composer action.
-     *
-     * @param string $action Composer action to be executed.
-     * @param string $dir    Directory in which composer should be ran.
-     *
-     * @return int Process exit code.
-     * @since 0.1.0
-     */
-    protected function execute($action, $dir)
-    {
-        $command = sprintf(
-            '%s %s -d %s',
-            $this->getComposerExecutable(),
-            $action,
-            $dir
-        );
-        exec($command, $out, $exitCode);
-        return $exitCode;
+        $helper = new FilesystemHelper();
+        $helper->cleanTemporaryDirectories(static::$keptDirs);
     }
 
     // data providers
@@ -120,8 +61,34 @@ class ComposerTest extends \Codeception\TestCase\Test
         );
     }
 
+    /**
+     * Data provider that spits out file permissions.
+     *
+     * @return array List of array consisting of single octal perms definition.
+     * @since 0.1.0
+     */
+    public function permissionsProvider()
+    {
+        return array(
+            array(0666,),
+            array(0777,),
+            array(0750,),
+        );
+    }
+
     // tests
 
+    /**
+     * Empty test just to make sure tearDownAfterClass will be working.
+     * See https://github.com/sebastianbergmann/phpunit/issues/1295
+     *
+     * @return void
+     * @since 0.1.0
+     */
+    public function testNothing()
+    {
+
+    }
     /**
      * Tests installation.
      *
@@ -139,20 +106,56 @@ class ComposerTest extends \Codeception\TestCase\Test
             array('version' => '1.5.6.3', 'action' => 'install'),
             array('version' => '1.5.6.4', 'action' => 'update'),
             array('version' => '1.5.6.3', 'action' => 'update'),
+            array('version' => '2.0.0.0b2', 'action' => 'update'),
         );
-        $fsm = new \Symfony\Component\Filesystem\Filesystem();
-        $pluginPath = $this->getPackageRoot();
-        $tempDir = $this->issueTempDirectory();
-        $fsm->mkdir($tempDir);
-        $config = new ComposerConfig($key, $this->getTemplateDir());
-        foreach ($scenario as $step) {
-            $version = $step['version'];
-            $action = $step['action'];
-            $config->write($tempDir, $version, $installDir, $pluginPath);
-            $this->assertSame(0, $this->execute($action, $tempDir));
-            $this->checkIndex($tempDir . '/' . $installDir, $version);
+        /** @type ComposerProject $project */
+        $project = $this->tester->prepareProject($key, $installDir);
+        $opencartPath = $project->getPath() . DIRECTORY_SEPARATOR . $installDir;
+        if (getenv('DEBUG') || getenv('OPENCART_INSTALLER_DEBUG')) {
+            self::$keptDirs[] = $project->getPath();
         }
-        $fsm->remove($tempDir);
+        $lastVersion = null;
+        foreach ($scenario as $step) {
+            $action = $step['action'];
+            $version = $step['version'];
+            $this->runInstallationScenarioStep($project, $version, $action);
+            if ($action === 'update') {
+                $this->tester->checkModifiableFilesAfterUpdate(
+                    $opencartPath,
+                    $lastVersion
+                );
+            }
+            $lastVersion = $version;
+        }
+        $this->tester->tearDownTemporaryDirectory($project->getPath());
+    }
+
+    /**
+     * Runs single installation step against particular Opencart version.
+     *
+     * @param ComposerProject $project Project.
+     * @param string          $version Opencart version.
+     * @param string          $action  Composer action to be run.
+     *
+     * @return void
+     * @since 0.1.0
+     */
+    protected function runInstallationScenarioStep(
+        ComposerProject $project,
+        $version,
+        $action
+    ) {
+        $project->updateConfig(array('opencart-version' => $version));
+        $result = $project->executeRawCommand($action);
+        $this->assertSame(
+            0,
+            $result->getExitCode(),
+            'Composer error: ' . PHP_EOL . PHP_EOL . $result->getOutput()
+        );
+        $this->checkIndex($project->getOpencartPath(), $version);
+        if ($action === 'install') {
+            $this->tester->createModifiableFiles($project->getOpencartPath());
+        }
     }
 
     /**
@@ -170,7 +173,10 @@ class ComposerTest extends \Codeception\TestCase\Test
         $message = sprintf('File `%s` doesn\'t exist', $path);
         $this->assertTrue(file_exists($path), $message);
         $index = file_get_contents($path);
-        $pattern = "~.*define\('VERSION',\s*'$version'\).*~ius";
+        // opencart specifies different versions in tags and index
+        preg_match('~\d+\.\d+\.\d+\.\d+~', $version, $strippedVersion);
+        $strippedVersion = $strippedVersion[0];
+        $pattern = "~.*define\('VERSION',\s*'$strippedVersion\w*'\).*~ius";
         $message = sprintf(
             "Pattern %s didn't match. Index content: \n\n %s",
             $pattern,

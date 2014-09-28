@@ -4,11 +4,12 @@ namespace Etki\Composer\Installers\Opencart;
 use Composer\Package\PackageInterface;
 use Composer\Installer\LibraryInstaller;
 use Composer\Repository\InstalledRepositoryInterface;
+use Symfony\Component\Filesystem\Filesystem;
 
 /**
  * Just an opencart installer, nothing to see here, move along.
  *
- * @todo implement caching for calculated install dirs
+ * @todo implement rich caching
  *
  * @version 0.1.0
  * @since   0.1.0
@@ -34,6 +35,14 @@ class Installer extends LibraryInstaller
     public $defaultInstallDir = 'opencart';
 
     /**
+     * Cache for quick lookup for package install dirs.
+     *
+     * @type string[]
+     * @since 0.1.0
+     */
+    protected $installDirCache = array();
+
+    /**
      * Tells composer if this installer supports provided package type.
      *
      * @param string $packageType Package type name.
@@ -43,7 +52,7 @@ class Installer extends LibraryInstaller
      */
     public function supports($packageType)
     {
-        $this->writeDebugMessage(
+        DebugPrinter::log(
             'Checking support for package type `%s` (%s)',
             array($packageType, $packageType === $this->packageType ? 'y' : 'n')
         );
@@ -56,16 +65,21 @@ class Installer extends LibraryInstaller
      *
      * @param PackageInterface $package Installed package.
      *
+     * @todo refactor
+     *
      * @return string
      * @since 0.1.0
      */
     public function getInstallPath(PackageInterface $package)
     {
         $prettyName = $package->getPrettyName();
-        $this->writeDebugMessage(
+        DebugPrinter::log(
             'Getting install path for `%s` package',
             array($prettyName,)
         );
+        if (isset($this->installDirCache[$prettyName])) {
+            return $this->installDirCache[$prettyName];
+        }
         $installDir = null;
         if ($this->composer->getPackage()) {
             $rootExtra = $this->composer->getPackage()->getExtra();
@@ -81,44 +95,19 @@ class Installer extends LibraryInstaller
         }
         if (is_array($installDir)) {
             if (isset($installDir[$prettyName])) {
+                $this->installDirCache[$prettyName] = $installDir[$prettyName];
                 return $installDir[$prettyName];
             }
+            $this->installDirCache[$prettyName] = $this->defaultInstallDir;
             return $this->defaultInstallDir;
         }
         $installDir = $installDir ? $installDir : $this->defaultInstallDir;
-        $this->writeDebugMessage(
+        DebugPrinter::log(
             'Computed install dir for package `%s`: `%s`',
             array($prettyName, $installDir,)
         );
+        $this->installDirCache[$prettyName] = $installDir;
         return $installDir;
-    }
-
-    /**
-     * Moves opencart from it's basic `upload` dir one level higher.
-     *
-     * @param string $installPath Path to files.
-     *
-     * @return void
-     * @since 0.1.0
-     */
-    protected function rotateFiles($installPath)
-    {
-        $parentDir = dirname($installPath);
-        $this->writeDebugMessage('Rotating files in `%s`', array($parentDir));
-        $tempDir = $parentDir . DIRECTORY_SEPARATOR . 'tmp-oi-' . md5(time());
-        $uploadDir = $tempDir . DIRECTORY_SEPARATOR . 'upload';
-        $this->writeDebugMessage(
-            'Moving files from `%s` to `%s`',
-            array($installPath, $tempDir,)
-        );
-        $this->filesystem->rename($installPath, $tempDir);
-        $this->writeDebugMessage(
-            'Moving files from `%s` to `%s`',
-            array($uploadDir, $installPath,)
-        );
-        $this->filesystem->rename($uploadDir, $installPath);
-        $this->writeDebugMessage('Removing `%s`', array($tempDir,));
-        $this->filesystem->remove($tempDir);
     }
 
     /**
@@ -135,14 +124,16 @@ class Installer extends LibraryInstaller
         PackageInterface $package
     ) {
         $installPath = $this->getInstallPath($package);
-        $this->writeDebugMessage(
+        $junglist = new FileJunglist;
+        DebugPrinter::log(
             'Installing package `%s` to %s',
             array($package->getPrettyName(), $installPath,)
         );
         parent::install($repo, $package);
-        $this->writeDebugMessage('Post-install file rotating');
-        $this->rotateFiles($installPath);
-        $this->writeDebugMessage('Finished installation');
+        DebugPrinter::log('Post-install file rotating');
+        $junglist->rotateInstalledFiles($installPath);
+        $junglist->copyConfigFiles($installPath);
+        DebugPrinter::log('Finished installation');
     }
 
     /**
@@ -160,33 +151,14 @@ class Installer extends LibraryInstaller
         PackageInterface $initial,
         PackageInterface $target
     ) {
-        $this->writeDebugMessage('Updating package');
+        $installPath = $this->getInstallPath($target);
+        $junglist = new FileJunglist;
+        $junglist->saveModifiedFiles($installPath);
+        DebugPrinter::log('Updating package');
         parent::update($repo, $initial, $target);
-        $this->writeDebugMessage('Post-update file rotate');
-        $this->rotateFiles($this->getInstallPath($target));
-        $this->writeDebugMessage('Finished updating');
-    }
-
-    /**
-     * Writes debug message to stdout.
-     *
-     * @param string            $message Message to be shown.
-     * @param array|string|null $args    Additional arguments for message
-     *                                   formatting.
-     *
-     * @return void
-     * @since 0.1.0
-     */
-    protected function writeDebugMessage($message, $args = null)
-    {
-        if (getenv('DEBUG') || getenv('OPENCART_INSTALLER_DEBUG')) {
-            if ($args) {
-                if (!is_array($args)) {
-                    $args = array($args);
-                }
-                $message = vsprintf($message, $args);
-            }
-            $this->io->write('OpencartInstaller: ' . $message);
-        }
+        DebugPrinter::log('Post-update file rotate');
+        $junglist->rotateInstalledFiles($installPath);
+        $junglist->restoreModifiedFiles($installPath);
+        DebugPrinter::log('Finished updating');
     }
 }
