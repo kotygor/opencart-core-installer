@@ -1,7 +1,6 @@
 <?php
 namespace Etki\Composer\Installers\Opencart;
 
-use Codeception\Util\Debug;
 use Symfony\Component\Filesystem\Filesystem;
 
 /**
@@ -164,9 +163,21 @@ class FileJunglist
         $fsm = new Filesystem;
         $tempDir = sys_get_temp_dir() . DIRECTORY_SEPARATOR . uniqid('oci-');
         DebugPrinter::log('Rotating files using `%s` dir', $tempDir);
-        $fsm->rename($installPath, $tempDir);
-        $fsm->rename($tempDir . DIRECTORY_SEPARATOR . 'upload', $installPath);
-        $fsm->remove($tempDir);
+        // unzipped contents may or may not contain `upload.*` directory,
+        // which holds actual opencart contents.
+        $dirs = glob($installPath . DIRECTORY_SEPARATOR . '*', GLOB_ONLYDIR);
+        foreach ($dirs as $key => $dir) {
+            if ($dir[0] === '.') {
+                unset($dirs[$key]);
+            }
+        }
+        if (sizeof($dirs) === 1) {
+            $subDirectory = $tempDir . DIRECTORY_SEPARATOR .
+                dirname(reset($dirs));
+            $fsm->rename($installPath, $tempDir);
+            $fsm->rename($subDirectory, $installPath);
+            $fsm->remove($tempDir);
+        }
     }
 
     /**

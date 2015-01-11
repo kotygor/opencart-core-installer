@@ -11,7 +11,6 @@ namespace Etki\Composer\Installers\Opencart;
  */
 class DebugPrinter
 {
-
     /**
      * Writes debug message to stdout.
      *
