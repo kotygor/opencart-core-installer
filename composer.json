@@ -23,8 +23,8 @@
     },
     "require": {
         "php": "*",
-        "symfony/console": "~5",
-        "symfony/filesystem": "~5",
+        "symfony/console": "~4",
+        "symfony/filesystem": "~4.4.x-dev",
         "composer-plugin-api": "~1.1"
     },
     "require-dev": {

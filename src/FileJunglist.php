@@ -113,6 +113,9 @@ class FileJunglist
             if ($fsm->exists($target)) {
                 $fsm->remove($target);
             }
+	        $source  = str_replace('\\', '/', $source);
+	        $target = substr_replace('\\', '/', $target);
+
             $fsm->rename($source, $target, true);
         }
         DebugPrinter::log('Finished restoring modified items');
@@ -174,6 +177,11 @@ class FileJunglist
         if (sizeof($dirs) === 1) {
             $subDirectory = $tempDir . DIRECTORY_SEPARATOR .
                 dirname(reset($dirs));
+
+	        $tempDir  = str_replace('\\', '/', $tempDir);
+            $installPath = str_replace('\\', '/', $installPath);
+	        $subDirectory = str_replace('\\', '/', $subDirectory);
+
             $fsm->rename($installPath, $tempDir);
             $fsm->rename($subDirectory, $installPath);
             $fsm->remove($tempDir);
