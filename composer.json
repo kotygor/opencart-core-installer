@@ -14,7 +14,6 @@
         "source": "https://github.com/etki/opencart-core-installer.git"
     },
     "license": "MIT",
-    "version": "0.1.3",
     "keywords": ["installer", "opencart"],
     "autoload": {
         "psr-4": {"Etki\\Composer\\Installers\\Opencart\\": "src/"}
