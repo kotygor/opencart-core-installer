@@ -1,5 +1,5 @@
 {
-    "name": "etki/opencart-core-installer",
+    "name": "kotygor/opencart-core-installer",
     "description": "Composer installer for Opencart",
     "type": "composer-plugin",
     "authors": [
