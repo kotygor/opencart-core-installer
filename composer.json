@@ -23,7 +23,7 @@
         "class": "Etki\\Composer\\Installers\\Opencart\\Plugin"
     },
     "require": {
-        "php": "^7",
+        "php": "~7",
         "symfony/console": "~5",
         "symfony/filesystem": "~5",
         "composer-plugin-api": "~1.1"
