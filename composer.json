@@ -8,14 +8,13 @@
             "email": "etki@etki.name",
             "homepage": "http://etki.name",
             "role": "Developer"
-        }
-    ],
+        }],
     "support": {
         "issues": "https://github.com/etki/opencart-core-installer/issues",
         "source": "https://github.com/etki/opencart-core-installer.git"
     },
     "license": "MIT",
-    "version": "0.1.0",
+    "version": "0.1.2",
     "keywords": ["installer", "opencart"],
     "autoload": {
         "psr-4": {"Etki\\Composer\\Installers\\Opencart\\": "src/"}
