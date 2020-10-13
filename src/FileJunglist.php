@@ -181,6 +181,10 @@ class FileJunglist
 	        $tempDir  = str_replace('\\', '/', $tempDir);
             $installPath = str_replace('\\', '/', $installPath);
 	        $subDirectory = str_replace('\\', '/', $subDirectory);
+	        
+	        if(function_exists('mylog')) {
+	            mylog( [$tempDir, $installPath, $subDirectory], 'path' . ' on ' . __FILE__ . '::' . __LINE__ );
+	        }
 
             $fsm->rename($installPath, $tempDir);
             $fsm->rename($subDirectory, $installPath);
