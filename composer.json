@@ -23,10 +23,9 @@
     },
     "require": {
         "php": "*",
-        "symfony/console": "~4",
-        "symfony/filesystem": "~4.4.x-dev",
-        "composer-plugin-api": "~1.1",
-        "kotygor/mylog": "*"
+        "symfony/console": "*",
+        "symfony/filesystem": "*",
+        "composer-plugin-api": "~1.1"
     },
     "repositories": [
         {
@@ -35,7 +34,7 @@
         }
     ],
     "require-dev": {
-        "composer/composer": "~1.0@dev",
-        "codeception/codeception": "4.1.x-dev"
+        "composer/composer": "*",
+        "codeception/codeception": "*"
     }
 }

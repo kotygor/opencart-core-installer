@@ -175,8 +175,8 @@ class FileJunglist
             }
         }
         if (sizeof($dirs) === 1) {
-            $subDirectory = $tempDir . DIRECTORY_SEPARATOR .
-                dirname(reset($dirs));
+            $subDirectory = $tempDir . DIRECTORY_SEPARATOR . 'upload';
+//                dirname(reset($dirs));
 
 	        $tempDir  = str_replace('\\', '/', $tempDir);
             $installPath = str_replace('\\', '/', $installPath);
