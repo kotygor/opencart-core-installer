@@ -196,6 +196,14 @@ class FileJunglist
 			    $installPath . DIRECTORY_SEPARATOR . 'upload'
 		    );
 		    if ($fsm->exists($uploadDirectory)) {
+		    	//removing \.* folders from web root
+			    $dirs = glob($uploadDirectory . DIRECTORY_SEPARATOR . '*', GLOB_ONLYDIR);
+			    foreach ($dirs as $key => $dir) {
+				    if ($dir[0] === '.') {
+					    $fsm->remove($uploadDirectory . '/' . $dirs[$key]);
+				    }
+			    }
+
 			    $fsm->rename($installPath, $tempDir);
 			    $fsm->rename($subDirectory, $installPath);
 			    $fsm->remove($tempDir);
