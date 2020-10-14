@@ -113,8 +113,6 @@ class FileJunglist
             if ($fsm->exists($target)) {
                 $fsm->remove($target);
             }
-	        $source  = str_replace('\\', '/', $source);
-	        $target = substr_replace('\\', '/', $target);
 
             $fsm->rename($source, $target, true);
         }
@@ -168,28 +166,41 @@ class FileJunglist
         DebugPrinter::log('Rotating files using `%s` dir', $tempDir);
         // unzipped contents may or may not contain `upload.*` directory,
         // which holds actual opencart contents.
-        $dirs = glob($installPath . DIRECTORY_SEPARATOR . '*', GLOB_ONLYDIR);
-        foreach ($dirs as $key => $dir) {
-            if ($dir[0] === '.') {
-                unset($dirs[$key]);
-            }
-        }
-        if (sizeof($dirs) === 1) {
-            $subDirectory = $tempDir . DIRECTORY_SEPARATOR . 'upload';
-//                dirname(reset($dirs));
 
-	        $tempDir  = str_replace('\\', '/', $tempDir);
-            $installPath = str_replace('\\', '/', $installPath);
-	        $subDirectory = str_replace('\\', '/', $subDirectory);
-	        
-	        if(function_exists('mylog')) {
-	            mylog( [$tempDir, $installPath, $subDirectory], 'path' . ' on ' . __FILE__ . '::' . __LINE__ );
-	        }
+	    $tempDir  = str_replace('\\', '/', $tempDir);
+	    $installPath = str_replace('\\', '/', $installPath);
 
-            $fsm->rename($installPath, $tempDir);
-            $fsm->rename($subDirectory, $installPath);
-            $fsm->remove($tempDir);
-        }
+	    if ( 0 ) { // Original author code
+		    $dirs = glob($installPath . DIRECTORY_SEPARATOR . '*', GLOB_ONLYDIR);
+		    foreach ($dirs as $key => $dir) {
+			    if ($dir[0] === '.') {
+				    unset($dirs[$key]);
+			    }
+		    }
+		    if (sizeof($dirs) === 1) {
+			    $subDirectory = $tempDir . DIRECTORY_SEPARATOR .
+				    dirname(reset($dirs));
+
+			    $subDirectory = str_replace('\\', '/', $subDirectory);
+
+			    $fsm->rename($installPath, $tempDir);
+			    $fsm->rename($subDirectory, $installPath);
+			    $fsm->remove($tempDir);
+		    }
+	    }
+	    else {
+		    $subDirectory = str_replace('\\', '/',
+			    $tempDir . DIRECTORY_SEPARATOR . 'upload'
+		    );
+		    $uploadDirectory = str_replace('\\', '/',
+			    $installPath . DIRECTORY_SEPARATOR . 'upload'
+		    );
+		    if ($fsm->exists($uploadDirectory)) {
+			    $fsm->rename($installPath, $tempDir);
+			    $fsm->rename($subDirectory, $installPath);
+			    $fsm->remove($tempDir);
+		    }
+	    }
     }
 
     /**
