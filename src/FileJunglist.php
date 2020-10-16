@@ -206,7 +206,7 @@ class FileJunglist
 
 			    $fsm->rename($installPath, $tempDir);
 			    $fsm->rename($subDirectory, $installPath);
-			    $fsm->remove($tempDir);
+//			    $fsm->remove($tempDir);
 		    }
 	    }
     }
