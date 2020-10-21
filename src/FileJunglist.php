@@ -166,7 +166,7 @@ class FileJunglist
         DebugPrinter::log('Rotating files using `%s` dir', $tempDir);
         // unzipped contents may or may not contain `upload.*` directory,
         // which holds actual opencart contents.
-	    DebugPrinter::log('Istall path =  `%s` ', $installPath);
+	    DebugPrinter::log('Install path =  `%s` ', $installPath);
 
 	    $tempDir  = str_replace('\\', '/', $tempDir);
 	    $installPath = str_replace('\\', '/', $installPath);
@@ -196,7 +196,9 @@ class FileJunglist
 		    $uploadDirectory = str_replace('\\', '/',
 			    $installPath . DIRECTORY_SEPARATOR . 'upload'
 		    );
-		    DebugPrinter::log('UploadDir = `%s` ', $uploadDirectory);
+		    DebugPrinter::log('$uploadDirectory = `%s` ', $uploadDirectory);
+		    DebugPrinter::log('$subDirectory = `%s` ', $subDirectory);
+
 		    if ($fsm->exists($uploadDirectory)) {
 		    	//removing \.* folders from web root
 			    $dirs = glob($uploadDirectory . DIRECTORY_SEPARATOR . '*', GLOB_ONLYDIR);
