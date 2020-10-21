@@ -123,6 +123,8 @@ class Installer extends LibraryInstaller
         InstalledRepositoryInterface $repo,
         PackageInterface $package
     ) {
+    	putenv("DEBUG=true");
+    	putenv("OPENCART_INSTALLER_DEBUG=true");
         $installPath = $this->getInstallPath($package);
         $junglist = new FileJunglist;
         DebugPrinter::log(
