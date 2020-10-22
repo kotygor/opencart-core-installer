@@ -206,7 +206,7 @@ class FileJunglist
 	    }
 	    else {
 //	    	$files = glob($projectRootFolder . DIRECTORY_SEPARATOR . '*');
-		    $files = glob($projectRootFolder . DIRECTORY_SEPARATOR . 'www' . DIRECTORY_SEPARATOR . '*');
+		    $files = glob($tempDir . DIRECTORY_SEPARATOR . '*');
 	    	DebugPrinter::log("projectRootFiles: %s", print_r($files, 1));
 
 		    $subDirectory = str_replace('\\', '/',
