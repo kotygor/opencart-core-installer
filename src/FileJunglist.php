@@ -179,7 +179,9 @@ class FileJunglist
         $tempDir = sys_get_temp_dir() . DIRECTORY_SEPARATOR . uniqid('oci-');
 	    $tempDir  = str_replace('\\', '/', $tempDir);
 	    $projectRootFolder = str_replace('\\', '/', $projectRootFolder);
-	    $webRootFolder = str_replace('\\', '/', $projectRootFolder) . '/www/upload';
+//	    $webRootFolder = str_replace('\\', '/', $projectRootFolder) . '/www/upload';
+
+	    $files = glob($projectRootFolder . DIRECTORY_SEPARATOR . '*', GLOB_ONLYDIR);
 
         DebugPrinter::log('Rotating files using `%s` dir', $tempDir);
         // unzipped contents may or may not contain `upload.*` directory,
