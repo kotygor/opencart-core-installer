@@ -125,18 +125,18 @@ class Installer extends LibraryInstaller
     ) {
     	putenv("DEBUG=true");
     	putenv("OPENCART_INSTALLER_DEBUG=true");
-//        $installPath = $this->getInstallPath($package);
-        $junglist = new FileJunglist;
-        DebugPrinter::log(
-            'Installing package `%s` to %s',
-            array($package->getPrettyName(), $installPath,)
-        );
+
+	    $webRootFolder = $this->composer->getPackage()->getExtra()['opencart-install-dir'];
+	    $vendorDir = $this->vendorDir;
+	    $prettyName = $package->getPrettyName();
+
         parent::install($repo, $package);
-        die();
-        DebugPrinter::log('Post-install file rotating');
-//        $junglist->rotateInstalledFiles($installPath);
-	    $junglist->rotateInstalledFiles('www');
-        $junglist->copyConfigFiles($installPath);
+
+	    DebugPrinter::log('Migrate Opencart files to root folder');
+        $junglist = new FileJunglist;
+
+	    $junglist->rotateInstalledFiles($vendorDir . '/' . $prettyName, $webRootFolder);
+//        $junglist->copyConfigFiles($installPath);
         DebugPrinter::log('Finished installation');
     }
 

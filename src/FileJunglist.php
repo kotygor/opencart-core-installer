@@ -173,98 +173,46 @@ class FileJunglist
     /**
      * Moves installed files out of `upload` dir.
      *
-     * @param string $webRootFolder Opencart installation path.
+     * @param string $packageFolder {vendorDir}/{packagePrettyName}
+     * @param string $webRootFolder Opencart public folder name.
      *
      * @return void
      * @since 0.1.0
      */
-    public function rotateInstalledFiles($projectRootFolder)
+    public function rotateInstalledFiles($packageFolder, $webRootFolder)
     {
         $fsm = new Filesystem;
-        $tempDir = sys_get_temp_dir() . DIRECTORY_SEPARATOR . uniqid('oci-');
-	    $tempDir  = str_replace('\\', '/', $tempDir);
-	    $projectRootFolder = str_replace('\\', '/', $projectRootFolder);
 
-	    $fsm->rename($projectRootFolder, $tempDir);
+	    $packageFolder = str_replace('\\', '/', $packageFolder);
+	    DebugPrinter::log('Package location: `%s`', $packageFolder);
 
-	    $webRootFolder = 'upload';
-
-	    $files = glob($projectRootFolder . DIRECTORY_SEPARATOR . '*');
+	    $files = glob($packageFolder . '/*');
 	    DebugPrinter::log("1. projectRootFiles: %s", print_r($files, 1));
 
 	    foreach ($files as $i => $file) {
-		    $filename = substr($file, strlen($projectRootFolder) + 1);
+
+		    $filename = basename($file);
 
 		    if (!in_array($filename, $this->ignoredFiles)) {
-		    	if ($filename == $webRootFolder) {
-				    $noRequiredFiles = glob($file . DIRECTORY_SEPARATOR . '\.*', GLOB_ONLYDIR);
-				    foreach ($noRequiredFiles as $noRequiredFile) {
-					    $fsm->remove($noRequiredFile);
+		    	if ($filename == 'upload') {
+				    $webRootFiles = glob($file . DIRECTORY_SEPARATOR . '*');
+
+				    DebugPrinter::log('Moving public files to webRootFolder');
+				    foreach ($webRootFiles as $webRootFile) {
+				    	$webRootFileName = basename($webRootFile);
+					    if(!in_array($webRootFileName, $this->ignoredFiles)) {
+					    	$fsm->rename($webRootFile, $webRootFolder . '/' . $webRootFileName);
+					    }
 				    }
-				    $fsm->rename($file, $projectRootFolder);
+				    $fsm->rename($file . '/.htaccess.txt', $webRootFolder . '/.htaccess.txt');
 			    }
 		    	else {
 		    		$fsm->rename($file, $filename);
 			    }
 		    }
-		    else {
-		    	$fsm->remove($file);
-		    }
 	    }
+	    $fsm->rename($packageFolder . '/.gitignore', $webRootFolder . '/.gitignore');
 
-//        DebugPrinter::log('Rotating files using `%s` dir', $tempDir);
-        // unzipped contents may or may not contain `upload.*` directory,
-        // which holds actual opencart contents.
-//	    DebugPrinter::log('Install path =  `%s` ', $webRootFolder);
-
-	    if ( 0 ) { // Original author code
-		    $dirs = glob($webRootFolder . DIRECTORY_SEPARATOR . '*', GLOB_ONLYDIR);
-		    foreach ($dirs as $key => $dir) {
-			    if ($dir[0] === '.') {
-				    unset($dirs[$key]);
-			    }
-		    }
-		    if (sizeof($dirs) === 1) {
-			    $subDirectory = $tempDir . DIRECTORY_SEPARATOR .
-				    dirname(reset($dirs));
-
-			    $subDirectory = str_replace('\\', '/', $subDirectory);
-
-			    $fsm->rename($webRootFolder, $tempDir);
-			    $fsm->rename($subDirectory, $webRootFolder);
-			    $fsm->remove($tempDir);
-		    }
-	    }
-	    else {
-//	    	$files = glob($projectRootFolder . DIRECTORY_SEPARATOR . '*');
-//		    $fsm->rename($projectRootFolder, $tempDir);
-//		    $files = glob($tempDir . DIRECTORY_SEPARATOR . 'www/*');
-//	    	DebugPrinter::log("projectRootFiles: %s", print_r($files, 1));
-//
-//		    $subDirectory = str_replace('\\', '/',
-//			    $tempDir . DIRECTORY_SEPARATOR . 'upload'
-//		    );
-//		    $uploadDirectory = str_replace('\\', '/',
-//			    $webRootFolder . DIRECTORY_SEPARATOR . 'upload'
-//		    );
-//		    DebugPrinter::log('$uploadDirectory = `%s` ', $uploadDirectory);
-//		    DebugPrinter::log('$subDirectory = `%s` ', $subDirectory);
-
-//		    if ($fsm->exists($uploadDirectory)) {
-//		    	//removing \.* folders from web root
-//			    $dirs = glob($uploadDirectory . DIRECTORY_SEPARATOR . '*', GLOB_ONLYDIR);
-//			    DebugPrinter::log('DIRS: `%s` ', print_r($dirs,1));
-//			    foreach ($dirs as $key => $dir) {
-//				    if ($dir[0] !== '.') {
-//					    $fsm->rename($uploadDirectory . '/' . $dir, $webRootFolder . '/' . $dir);
-//				    }
-//			    }
-
-//			    $fsm->rename($installPath, $tempDir);
-//			    $fsm->rename($subDirectory, $installPath);
-//			    $fsm->remove($tempDir);
-//		    }
-	    }
     }
 
     /**
