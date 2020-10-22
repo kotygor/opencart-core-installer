@@ -206,6 +206,7 @@ class FileJunglist
 	    }
 	    else {
 //	    	$files = glob($projectRootFolder . DIRECTORY_SEPARATOR . '*');
+		    $fsm->rename($webRootFolder, $tempDir);
 		    $files = glob($tempDir . DIRECTORY_SEPARATOR . '*');
 	    	DebugPrinter::log("projectRootFiles: %s", print_r($files, 1));
 
