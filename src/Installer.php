@@ -132,7 +132,7 @@ class Installer extends LibraryInstaller
             array($package->getPrettyName(), $installPath,)
         );
         parent::install($repo, $package);
-        DebugPrinter::log('Here will be error `%s`', $notExists);
+        die();
         DebugPrinter::log('Post-install file rotating');
         $junglist->rotateInstalledFiles($installPath);
         $junglist->copyConfigFiles($installPath);
