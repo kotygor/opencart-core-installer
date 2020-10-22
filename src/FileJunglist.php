@@ -41,11 +41,25 @@ class FileJunglist
      */
     protected $modifiableFiles = array(
         'config.php',
+        '.htaccess',
+        'php.ini',
+        'robots.txt',
         'admin/config.php',
         'image',
         'system/logs',
         'system/download',
     );
+    protected $ignoredFiles = [
+	    'build.xml',
+    	'CHANGELOG.md',
+	    'CHANGELOG_AUTO.md',
+	    'composer.json',
+	    'composer.lock',
+	    'install.txt',
+	    'license.txt',
+	    'README.md',
+	    'upgrade.txt'
+    ];
 
     /**
      * Saves config files during install.
@@ -154,25 +168,26 @@ class FileJunglist
     /**
      * Moves installed files out of `upload` dir.
      *
-     * @param string $installPath Opencart installation path.
+     * @param string $webRootFolder Opencart installation path.
      *
      * @return void
      * @since 0.1.0
      */
-    public function rotateInstalledFiles($installPath)
+    public function rotateInstalledFiles($projectRootFolder)
     {
         $fsm = new Filesystem;
         $tempDir = sys_get_temp_dir() . DIRECTORY_SEPARATOR . uniqid('oci-');
         DebugPrinter::log('Rotating files using `%s` dir', $tempDir);
         // unzipped contents may or may not contain `upload.*` directory,
         // which holds actual opencart contents.
-	    DebugPrinter::log('Install path =  `%s` ', $installPath);
+	    DebugPrinter::log('Install path =  `%s` ', $webRootFolder);
 
 	    $tempDir  = str_replace('\\', '/', $tempDir);
-	    $installPath = str_replace('\\', '/', $installPath);
+	    $projectRootFolder = str_replace('\\', '/', $projectRootFolder);
+	    $webRootFolder = str_replace('\\', '/', $webRootFolder);
 
 	    if ( 0 ) { // Original author code
-		    $dirs = glob($installPath . DIRECTORY_SEPARATOR . '*', GLOB_ONLYDIR);
+		    $dirs = glob($webRootFolder . DIRECTORY_SEPARATOR . '*', GLOB_ONLYDIR);
 		    foreach ($dirs as $key => $dir) {
 			    if ($dir[0] === '.') {
 				    unset($dirs[$key]);
@@ -184,17 +199,19 @@ class FileJunglist
 
 			    $subDirectory = str_replace('\\', '/', $subDirectory);
 
-			    $fsm->rename($installPath, $tempDir);
-			    $fsm->rename($subDirectory, $installPath);
+			    $fsm->rename($webRootFolder, $tempDir);
+			    $fsm->rename($subDirectory, $webRootFolder);
 			    $fsm->remove($tempDir);
 		    }
 	    }
 	    else {
+	    	$files = glob($projectRootFolder . DIRECTORY_SEPARATOR . '*');
+	    	DebugPrinter::log("projectRootFiles: %s", print_r($projectRootFolder, 1));
 		    $subDirectory = str_replace('\\', '/',
 			    $tempDir . DIRECTORY_SEPARATOR . 'upload'
 		    );
 		    $uploadDirectory = str_replace('\\', '/',
-			    $installPath . DIRECTORY_SEPARATOR . 'upload'
+			    $webRootFolder . DIRECTORY_SEPARATOR . 'upload'
 		    );
 		    DebugPrinter::log('$uploadDirectory = `%s` ', $uploadDirectory);
 		    DebugPrinter::log('$subDirectory = `%s` ', $subDirectory);
@@ -205,7 +222,7 @@ class FileJunglist
 			    DebugPrinter::log('DIRS: `%s` ', print_r($dirs,1));
 			    foreach ($dirs as $key => $dir) {
 				    if ($dir[0] !== '.') {
-					    $fsm->rename($uploadDirectory . '/' . $dir, $installPath . '/' . $dir);
+					    $fsm->rename($uploadDirectory . '/' . $dir, $webRootFolder . '/' . $dir);
 				    }
 			    }
 

@@ -19,7 +19,8 @@
         "psr-4": {"Etki\\Composer\\Installers\\Opencart\\": "src/"}
     },
     "extra": {
-        "class": "Etki\\Composer\\Installers\\Opencart\\Plugin"
+        "class": "Etki\\Composer\\Installers\\Opencart\\Plugin",
+        "opencart-install-dir": "www"
     },
     "require": {
         "php": "*",
