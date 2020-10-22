@@ -187,13 +187,16 @@ class FileJunglist
 	    foreach ($files as $i => $file) {
 		    $filename = substr($file, strlen($projectRootFolder) + 1);
 		    DebugPrinter::log('Filename `%s`: `%s`', [$i+1, $filename]);
-		    if (!in_array($filename, $this->ignoredFiles)) {
+		    if (!in_array($filename, $this->ignoredFiles) && $filename[0] !== '.') {
 		    	if ($filename == $webRootFolder) {
 
 			    }
 		    	else {
 		    		$fsm->rename($file, $filename);
 			    }
+		    }
+		    else {
+		    	$fsm->remove($file);
 		    }
 	    }
 
