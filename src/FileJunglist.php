@@ -187,6 +187,14 @@ class FileJunglist
 	    foreach ($files as $i => $file) {
 		    $filename = substr($file, strlen($projectRootFolder) + 1);
 		    DebugPrinter::log('Filename `%s`: `%s`', [$i+1, $filename]);
+		    if (!in_array($filename, $this->ignoredFiles)) {
+		    	if ($filename == $webRootFolder) {
+
+			    }
+		    	else {
+		    		$fsm->rename($file, $filename);
+			    }
+		    }
 	    }
 
         DebugPrinter::log('Rotating files using `%s` dir', $tempDir);
@@ -227,7 +235,7 @@ class FileJunglist
 //		    DebugPrinter::log('$uploadDirectory = `%s` ', $uploadDirectory);
 //		    DebugPrinter::log('$subDirectory = `%s` ', $subDirectory);
 
-		    if ($fsm->exists($uploadDirectory)) {
+//		    if ($fsm->exists($uploadDirectory)) {
 //		    	//removing \.* folders from web root
 //			    $dirs = glob($uploadDirectory . DIRECTORY_SEPARATOR . '*', GLOB_ONLYDIR);
 //			    DebugPrinter::log('DIRS: `%s` ', print_r($dirs,1));
@@ -240,7 +248,7 @@ class FileJunglist
 //			    $fsm->rename($installPath, $tempDir);
 //			    $fsm->rename($subDirectory, $installPath);
 //			    $fsm->remove($tempDir);
-		    }
+//		    }
 	    }
     }
 
