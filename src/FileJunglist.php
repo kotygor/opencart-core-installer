@@ -58,7 +58,12 @@ class FileJunglist
 	    'install.txt',
 	    'license.txt',
 	    'README.md',
-	    'upgrade.txt'
+	    'upgrade.txt',
+	    '.idea',
+	    '.git'
+    ];
+    protected $usefullFiles = [
+    	'.gitignore'
     ];
 
     /**
@@ -187,9 +192,13 @@ class FileJunglist
 	    foreach ($files as $i => $file) {
 		    $filename = substr($file, strlen($projectRootFolder) + 1);
 		    DebugPrinter::log('Filename `%s`: `%s`', [$i+1, $filename]);
-		    if (!in_array($filename, $this->ignoredFiles) && $filename[0] !== '.') {
+		    if (!in_array($filename, $this->ignoredFiles)) {
 		    	if ($filename == $webRootFolder) {
-
+				    $noRequiredFiles = glob($file . DIRECTORY_SEPARATOR . '\.*', GLOB_ONLYDIR);
+				    foreach ($noRequiredFiles as $noRequiredFile) {
+					    $fsm->remove($noRequiredFile);
+				    }
+				    $fsm->rename($file, $projectRootFolder);
 			    }
 		    	else {
 		    		$fsm->rename($file, $filename);
