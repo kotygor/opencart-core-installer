@@ -205,8 +205,10 @@ class FileJunglist
 		    }
 	    }
 	    else {
-	    	$files = glob($projectRootFolder . DIRECTORY_SEPARATOR . '*');
-	    	DebugPrinter::log("projectRootFiles: %s", print_r($projectRootFolder, 1));
+//	    	$files = glob($projectRootFolder . DIRECTORY_SEPARATOR . '*');
+		    $files = glob($projectRootFolder . DIRECTORY_SEPARATOR . 'www' . DIRECTORY_SEPARATOR . '*');
+	    	DebugPrinter::log("projectRootFiles: %s", print_r($files, 1));
+
 		    $subDirectory = str_replace('\\', '/',
 			    $tempDir . DIRECTORY_SEPARATOR . 'upload'
 		    );
