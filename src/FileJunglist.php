@@ -191,7 +191,7 @@ class FileJunglist
 
 	    foreach ($files as $i => $file) {
 		    $filename = substr($file, strlen($projectRootFolder) + 1);
-		    DebugPrinter::log('Filename `%s`: `%s`', [$i+1, $filename]);
+
 		    if (!in_array($filename, $this->ignoredFiles)) {
 		    	if ($filename == $webRootFolder) {
 				    $noRequiredFiles = glob($file . DIRECTORY_SEPARATOR . '\.*', GLOB_ONLYDIR);
@@ -209,10 +209,10 @@ class FileJunglist
 		    }
 	    }
 
-        DebugPrinter::log('Rotating files using `%s` dir', $tempDir);
+//        DebugPrinter::log('Rotating files using `%s` dir', $tempDir);
         // unzipped contents may or may not contain `upload.*` directory,
         // which holds actual opencart contents.
-	    DebugPrinter::log('Install path =  `%s` ', $webRootFolder);
+//	    DebugPrinter::log('Install path =  `%s` ', $webRootFolder);
 
 	    if ( 0 ) { // Original author code
 		    $dirs = glob($webRootFolder . DIRECTORY_SEPARATOR . '*', GLOB_ONLYDIR);
