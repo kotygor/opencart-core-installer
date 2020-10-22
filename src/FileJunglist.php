@@ -177,14 +177,14 @@ class FileJunglist
     {
         $fsm = new Filesystem;
         $tempDir = sys_get_temp_dir() . DIRECTORY_SEPARATOR . uniqid('oci-');
+	    $tempDir  = str_replace('\\', '/', $tempDir);
+	    $projectRootFolder = str_replace('\\', '/', $projectRootFolder);
+	    $webRootFolder = str_replace('\\', '/', $projectRootFolder) . '/www/upload';
+
         DebugPrinter::log('Rotating files using `%s` dir', $tempDir);
         // unzipped contents may or may not contain `upload.*` directory,
         // which holds actual opencart contents.
 	    DebugPrinter::log('Install path =  `%s` ', $webRootFolder);
-
-	    $tempDir  = str_replace('\\', '/', $tempDir);
-	    $projectRootFolder = str_replace('\\', '/', $projectRootFolder);
-	    $webRootFolder = str_replace('\\', '/', $projectRootFolder) . '/www/upload';
 
 	    if ( 0 ) { // Original author code
 		    $dirs = glob($webRootFolder . DIRECTORY_SEPARATOR . '*', GLOB_ONLYDIR);
