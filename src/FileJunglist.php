@@ -184,6 +184,11 @@ class FileJunglist
 	    $files = glob($projectRootFolder . DIRECTORY_SEPARATOR . '*');
 	    DebugPrinter::log("1. projectRootFiles: %s", print_r($files, 1));
 
+	    foreach ($files as $i => $file) {
+		    $filename = substr(strlen($projectRootFolder) + 1);
+		    DebugPrinter::log('Filename `%s`: `%s`', $i+1, $filename);
+	    }
+
         DebugPrinter::log('Rotating files using `%s` dir', $tempDir);
         // unzipped contents may or may not contain `upload.*` directory,
         // which holds actual opencart contents.
