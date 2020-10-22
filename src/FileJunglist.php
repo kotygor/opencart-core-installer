@@ -184,6 +184,9 @@ class FileJunglist
         $tempDir = sys_get_temp_dir() . DIRECTORY_SEPARATOR . uniqid('oci-');
 	    $tempDir  = str_replace('\\', '/', $tempDir);
 	    $projectRootFolder = str_replace('\\', '/', $projectRootFolder);
+
+	    $fsm->rename($projectRootFolder, $tempDir);
+
 	    $webRootFolder = 'upload';
 
 	    $files = glob($projectRootFolder . DIRECTORY_SEPARATOR . '*');
