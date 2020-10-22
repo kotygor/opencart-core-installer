@@ -179,7 +179,7 @@ class FileJunglist
         $tempDir = sys_get_temp_dir() . DIRECTORY_SEPARATOR . uniqid('oci-');
 	    $tempDir  = str_replace('\\', '/', $tempDir);
 	    $projectRootFolder = str_replace('\\', '/', $projectRootFolder);
-//	    $webRootFolder = str_replace('\\', '/', $projectRootFolder) . '/www/upload';
+	    $webRootFolder = 'upload';
 
 	    $files = glob($projectRootFolder . DIRECTORY_SEPARATOR . '*');
 	    DebugPrinter::log("1. projectRootFiles: %s", print_r($files, 1));
@@ -214,28 +214,28 @@ class FileJunglist
 	    }
 	    else {
 //	    	$files = glob($projectRootFolder . DIRECTORY_SEPARATOR . '*');
-		    $fsm->rename($projectRootFolder, $tempDir);
-		    $files = glob($tempDir . DIRECTORY_SEPARATOR . 'www/*');
-	    	DebugPrinter::log("projectRootFiles: %s", print_r($files, 1));
-
-		    $subDirectory = str_replace('\\', '/',
-			    $tempDir . DIRECTORY_SEPARATOR . 'upload'
-		    );
-		    $uploadDirectory = str_replace('\\', '/',
-			    $webRootFolder . DIRECTORY_SEPARATOR . 'upload'
-		    );
-		    DebugPrinter::log('$uploadDirectory = `%s` ', $uploadDirectory);
-		    DebugPrinter::log('$subDirectory = `%s` ', $subDirectory);
+//		    $fsm->rename($projectRootFolder, $tempDir);
+//		    $files = glob($tempDir . DIRECTORY_SEPARATOR . 'www/*');
+//	    	DebugPrinter::log("projectRootFiles: %s", print_r($files, 1));
+//
+//		    $subDirectory = str_replace('\\', '/',
+//			    $tempDir . DIRECTORY_SEPARATOR . 'upload'
+//		    );
+//		    $uploadDirectory = str_replace('\\', '/',
+//			    $webRootFolder . DIRECTORY_SEPARATOR . 'upload'
+//		    );
+//		    DebugPrinter::log('$uploadDirectory = `%s` ', $uploadDirectory);
+//		    DebugPrinter::log('$subDirectory = `%s` ', $subDirectory);
 
 		    if ($fsm->exists($uploadDirectory)) {
-		    	//removing \.* folders from web root
-			    $dirs = glob($uploadDirectory . DIRECTORY_SEPARATOR . '*', GLOB_ONLYDIR);
-			    DebugPrinter::log('DIRS: `%s` ', print_r($dirs,1));
-			    foreach ($dirs as $key => $dir) {
-				    if ($dir[0] !== '.') {
-					    $fsm->rename($uploadDirectory . '/' . $dir, $webRootFolder . '/' . $dir);
-				    }
-			    }
+//		    	//removing \.* folders from web root
+//			    $dirs = glob($uploadDirectory . DIRECTORY_SEPARATOR . '*', GLOB_ONLYDIR);
+//			    DebugPrinter::log('DIRS: `%s` ', print_r($dirs,1));
+//			    foreach ($dirs as $key => $dir) {
+//				    if ($dir[0] !== '.') {
+//					    $fsm->rename($uploadDirectory . '/' . $dir, $webRootFolder . '/' . $dir);
+//				    }
+//			    }
 
 //			    $fsm->rename($installPath, $tempDir);
 //			    $fsm->rename($subDirectory, $installPath);
