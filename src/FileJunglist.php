@@ -207,7 +207,7 @@ class FileJunglist
 	    else {
 //	    	$files = glob($projectRootFolder . DIRECTORY_SEPARATOR . '*');
 		    $fsm->rename($projectRootFolder, $tempDir);
-		    $files = glob($tempDir . DIRECTORY_SEPARATOR . '*');
+		    $files = glob($tempDir . DIRECTORY_SEPARATOR . 'www/*');
 	    	DebugPrinter::log("projectRootFiles: %s", print_r($files, 1));
 
 		    $subDirectory = str_replace('\\', '/',
