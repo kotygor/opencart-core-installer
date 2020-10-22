@@ -182,6 +182,7 @@ class FileJunglist
 //	    $webRootFolder = str_replace('\\', '/', $projectRootFolder) . '/www/upload';
 
 	    $files = glob($projectRootFolder . DIRECTORY_SEPARATOR . '*', GLOB_ONLYDIR);
+	    DebugPrinter::log("1. projectRootFiles: %s", print_r($files, 1));
 
         DebugPrinter::log('Rotating files using `%s` dir', $tempDir);
         // unzipped contents may or may not contain `upload.*` directory,
