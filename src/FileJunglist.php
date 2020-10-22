@@ -186,7 +186,7 @@ class FileJunglist
 
 	    foreach ($files as $i => $file) {
 		    $filename = substr($file, strlen($projectRootFolder) + 1);
-		    DebugPrinter::log('Filename `%s`: `%s`', $i+1, $filename);
+		    DebugPrinter::log('Filename `%s`: `%s`', [$i+1, $filename]);
 	    }
 
         DebugPrinter::log('Rotating files using `%s` dir', $tempDir);
