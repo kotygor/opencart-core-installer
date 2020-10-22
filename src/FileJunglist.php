@@ -184,7 +184,7 @@ class FileJunglist
 
 	    $tempDir  = str_replace('\\', '/', $tempDir);
 	    $projectRootFolder = str_replace('\\', '/', $projectRootFolder);
-	    $webRootFolder = str_replace('\\', '/', $webRootFolder);
+	    $webRootFolder = str_replace('\\', '/', $projectRootFolder) . '/www/upload';
 
 	    if ( 0 ) { // Original author code
 		    $dirs = glob($webRootFolder . DIRECTORY_SEPARATOR . '*', GLOB_ONLYDIR);
