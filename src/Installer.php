@@ -70,7 +70,7 @@ class Installer extends LibraryInstaller
      * @return string
      * @since 0.1.0
      */
-    public function getInstallPath(PackageInterface $package)
+    public function getInstallPath1(PackageInterface $package)
     {
         $prettyName = $package->getPrettyName();
         DebugPrinter::log(
@@ -125,7 +125,7 @@ class Installer extends LibraryInstaller
     ) {
     	putenv("DEBUG=true");
     	putenv("OPENCART_INSTALLER_DEBUG=true");
-        $installPath = $this->getInstallPath($package);
+//        $installPath = $this->getInstallPath($package);
         $junglist = new FileJunglist;
         DebugPrinter::log(
             'Installing package `%s` to %s',
@@ -134,7 +134,8 @@ class Installer extends LibraryInstaller
         parent::install($repo, $package);
         die();
         DebugPrinter::log('Post-install file rotating');
-        $junglist->rotateInstalledFiles($installPath);
+//        $junglist->rotateInstalledFiles($installPath);
+	    $junglist->rotateInstalledFiles('www');
         $junglist->copyConfigFiles($installPath);
         DebugPrinter::log('Finished installation');
     }
