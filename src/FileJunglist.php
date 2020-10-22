@@ -185,7 +185,7 @@ class FileJunglist
 	    DebugPrinter::log("1. projectRootFiles: %s", print_r($files, 1));
 
 	    foreach ($files as $i => $file) {
-		    $filename = substr(strlen($projectRootFolder) + 1);
+		    $filename = substr($file, strlen($projectRootFolder) + 1);
 		    DebugPrinter::log('Filename `%s`: `%s`', $i+1, $filename);
 	    }
 
