@@ -181,7 +181,7 @@ class FileJunglist
 	    $projectRootFolder = str_replace('\\', '/', $projectRootFolder);
 //	    $webRootFolder = str_replace('\\', '/', $projectRootFolder) . '/www/upload';
 
-	    $files = glob($projectRootFolder . DIRECTORY_SEPARATOR . '*', GLOB_ONLYDIR);
+	    $files = glob($projectRootFolder . DIRECTORY_SEPARATOR . '*');
 	    DebugPrinter::log("1. projectRootFiles: %s", print_r($files, 1));
 
         DebugPrinter::log('Rotating files using `%s` dir', $tempDir);
