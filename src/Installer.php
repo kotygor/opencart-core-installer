@@ -128,6 +128,7 @@ class Installer extends LibraryInstaller
 
 	    $webRootFolder = $this->composer->getPackage()->getExtra()['opencart-install-dir'];
 	    $vendorDir = $this->vendorDir;
+	    $storageFolder = $this->composer->getPackage()->getExtra()['opencart-storage-dir'];
 	    $prettyName = $package->getPrettyName();
 
         parent::install($repo, $package);
@@ -135,7 +136,7 @@ class Installer extends LibraryInstaller
 	    DebugPrinter::log('Migrate Opencart files to root folder');
         $junglist = new FileJunglist;
 
-	    $junglist->rotateInstalledFiles($vendorDir . '/' . $prettyName, $webRootFolder);
+	    $junglist->rotateInstalledFiles($vendorDir . '/' . $prettyName, $webRootFolder, $storageFolder);
 //        $junglist->copyConfigFiles($installPath);
         DebugPrinter::log('Finished installation');
     }

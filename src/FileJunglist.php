@@ -179,7 +179,7 @@ class FileJunglist
      * @return void
      * @since 0.1.0
      */
-    public function rotateInstalledFiles($packageFolder, $webRootFolder)
+    public function rotateInstalledFiles($packageFolder, $webRootFolder, $storageFolder)
     {
         $fsm = new Filesystem;
 
@@ -194,13 +194,17 @@ class FileJunglist
 		    $filename = basename($file);
 
 		    if (!in_array($filename, $this->ignoredFiles)) {
-		    	if ($filename == 'upload') {
+		    	if ($filename == 'upload') { // Remove files from UploadDir to webRoot
 				    $webRootFiles = glob($file . DIRECTORY_SEPARATOR . '*');
 
 				    DebugPrinter::log('Moving public files to webRootFolder');
 				    foreach ($webRootFiles as $webRootFile) {
 				    	$webRootFileName = basename($webRootFile);
+
 					    if(!in_array($webRootFileName, $this->ignoredFiles)) {
+					    	if ($webRootFileName == 'system') { // Move storageDir to projectRoot (outside from web-access)
+					    		$fsm->rename($webRootFile . '/storage', $storageFolder);
+						    }
 					    	$fsm->rename($webRootFile, $webRootFolder . '/' . $webRootFileName);
 					    }
 				    }
