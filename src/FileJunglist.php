@@ -208,6 +208,7 @@ class FileJunglist
 							    }
 					    		else {
 					    			$fsm->mirror($webRootFile . '/storage', $storageFolder);
+					    			$fsm->remove($webRootFile . '/storage');
 							    }
 
 						    }
