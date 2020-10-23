@@ -137,7 +137,7 @@ class Installer extends LibraryInstaller
         $junglist = new FileJunglist;
 
 	    $junglist->rotateInstalledFiles($vendorDir . '/' . $prettyName, $webRootFolder, $storageFolder);
-//        $junglist->copyConfigFiles($installPath);
+        $junglist->copyConfigFiles($webRootFolder);
         DebugPrinter::log('Finished installation');
     }
 
