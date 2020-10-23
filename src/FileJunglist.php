@@ -203,7 +203,13 @@ class FileJunglist
 
 					    if(!in_array($webRootFileName, $this->ignoredFiles)) {
 					    	if ($webRootFileName == 'system') { // Move storageDir to projectRoot (outside from web-access)
-					    		$fsm->rename($webRootFile . '/storage', $storageFolder);
+					    		if(!$fsm->exists($storageFolder)) {
+								    $fsm->rename($webRootFile . '/storage', $storageFolder);
+							    }
+					    		else {
+					    			$fsm->mirror($webRootFile . '/storage', $storageFolder);
+							    }
+
 						    }
 					    	$fsm->rename($webRootFile, $webRootFolder . '/' . $webRootFileName);
 					    }
@@ -213,6 +219,9 @@ class FileJunglist
 		    	else {
 		    		if (!$fsm->exists($filename)) {
 					    $fsm->rename($file, $filename);
+				    }
+		    		else {
+		    			$fsm->mirror($file, $filename);
 				    }
 			    }
 		    }
