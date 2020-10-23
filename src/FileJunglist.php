@@ -227,7 +227,13 @@ class FileJunglist
 			    }
 		    }
 	    }
-	    $fsm->rename($packageFolder . '/.gitignore', '.gitignore');
+	    if (!$fsm->exists('.gitignore')) {
+		    $fsm->rename($packageFolder . '/.gitignore', '.gitignore');
+	    }
+	    else {
+	    	$fsm->remove($packageFolder . '/.gitignore');
+	    }
+
 
     }
 
