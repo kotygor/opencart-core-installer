@@ -207,11 +207,13 @@ class FileJunglist
 				    $fsm->rename($file . '/.htaccess.txt', $webRootFolder . '/.htaccess.txt');
 			    }
 		    	else {
-		    		$fsm->rename($file, $filename);
+		    		if (!$fsm->exists($filename)) {
+					    $fsm->rename($file, $filename);
+				    }
 			    }
 		    }
 	    }
-	    $fsm->rename($packageFolder . '/.gitignore', $webRootFolder . '/.gitignore');
+	    $fsm->rename($packageFolder . '/.gitignore', '.gitignore');
 
     }
 

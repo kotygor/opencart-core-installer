@@ -155,7 +155,7 @@ class Installer extends LibraryInstaller
         PackageInterface $initial,
         PackageInterface $target
     ) {
-        $installPath = $this->getInstallPath($target);
+        $installPath =  $this->composer->getPackage()->getExtra()['opencart-install-dir'];
         $junglist = new FileJunglist;
         $junglist->saveModifiedFiles($installPath);
         DebugPrinter::log('Updating package');
