@@ -10,6 +10,8 @@ directory.
 Opencart is not available through Composer yet (and it also requires custom
 `opencart-core` package type to be installed by this installer), so you have to
 specify it manually as a repository in your `composer.json`:
+# Why it's bad idea use this way
+See https://stackoverflow.com/a/14485706
 
 ```js
 "repositories": [

@@ -10,6 +10,9 @@ Opencart пока еще недоступен на packagist (а еще инст
 специальный тип пакета, `opencart-core`), поэтому придется задать его как
 репозиторий в `composer.json`:
 
+# Не совсем хорошая идея использовать "type":"package"
+Подробнее в ответе - https://stackoverflow.com/a/14485706 
+
 ```js
 "repositories": [
     {
