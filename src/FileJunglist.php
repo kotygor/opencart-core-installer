@@ -179,7 +179,7 @@ class FileJunglist
      * @return void
      * @since 0.1.0
      */
-    public function rotateInstalledFiles($packageFolder, $webRootFolder, $storageFolder)
+    public function rotateInstalledFiles($packageFolder, $webRootFolder, $storageFolder, $installFolder = true)
     {
         $fsm = new Filesystem;
 
@@ -205,25 +205,32 @@ class FileJunglist
 				    	$webRootFileName = basename($webRootFile);
 
 					    if(!in_array($webRootFileName, $this->ignoredFiles)) {
-					    	if ($webRootFileName == 'system') { // Move storageDir to projectRoot (outside from web-access)
-					    		if(!$fsm->exists($storageFolder)) {
-					    			$fsm->mirror($webRootFile . '/storage', $storageFolder);
-								    $fsm->remove($webRootFile . '/storage');
+					    	switch ($webRootFileName) {
+							    case 'system': { // Move storageDir to projectRoot (outside from web-access)
+								    if(!$fsm->exists($storageFolder)) {
+									    $fsm->mirror($webRootFile . '/storage', $storageFolder);
+									    $fsm->remove($webRootFile . '/storage');
+								    }
+								    else {
+									    $fsm->mirror($webRootFile . '/storage', $storageFolder);
+								    }
+							    	break;
 							    }
-					    		else {
-					    			$fsm->mirror($webRootFile . '/storage', $storageFolder);
-//					    			$fsm->remove($webRootFile . '/storage');
+							    case 'install': { // Move or not install folder
+							    	if ($installFolder) {
+									    $fsm->mirror($webRootFile, $webRootFolder . '/' . $webRootFileName);
+								    }
+							    	break;
 							    }
-
+							    default: {
+								    if (is_dir($webRootFile)) {
+									    $fsm->mirror($webRootFile, $webRootFolder . '/' . $webRootFileName);
+								    }
+								    else {
+									    $fsm->copy($webRootFile, $webRootFolder . '/' . $webRootFileName);
+								    }
+							    }
 						    }
-//					    	$fsm->rename($webRootFile, $webRootFolder . '/' . $webRootFileName);
-						    if (is_dir($webRootFile)) {
-							    $fsm->mirror($webRootFile, $webRootFolder . '/' . $webRootFileName);
-						    }
-					    	else {
-					    		$fsm->copy($webRootFile, $webRootFolder . '/' . $webRootFileName);
-						    }
-
 					    }
 				    }
 				    if (!$fsm->exists($webRootFolder . '/.htaccess')) {
