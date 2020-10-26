@@ -234,7 +234,12 @@ class FileJunglist
 				    DebugPrinter::log("Filename: -`%s`-", $filename);
 				    $filename = $projectFolder . '/' . $filename;
 				    DebugPrinter::log("File: `%s`", $file);
-				    $fsm->mirror($file, $filename);
+				    if (is_dir($file)) {
+					    $fsm->mirror($file, $filename);
+				    }
+				    else {
+					    $fsm->copy($file, $filename);
+				    }
 			    }
 		    }
 	    }
