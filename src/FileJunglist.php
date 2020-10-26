@@ -236,7 +236,7 @@ class FileJunglist
 									    $fsm->mirror($webRootFile, $webRootFolder . '/' . $webRootFileName);
 								    }
 								    else {
-									    $fsm->copy($webRootFile, $webRootFolder . '/' . $webRootFileName);
+									    $fsm->copy($webRootFile, $webRootFolder . '/' . $webRootFileName, 1);
 								    }
 							    }
 						    }
