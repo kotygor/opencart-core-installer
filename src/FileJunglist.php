@@ -184,6 +184,8 @@ class FileJunglist
         $fsm = new Filesystem;
 
 	    $packageFolder = str_replace('\\', '/', $packageFolder);
+	    $projectFolder = dirname($webRootFolder);
+	    DebugPrinter::log("Project folder path: `%s`", $projectFolder);
 	    DebugPrinter::log('Package location: `%s`', $packageFolder);
 
 	    $files = glob($packageFolder . '/*');
@@ -224,6 +226,7 @@ class FileJunglist
 			    }
 		    	else {
 				    DebugPrinter::log("Filename: -`%s`-", $filename);
+				    $filename = $projectFolder . '/' . $filename;
 		    		if (!$fsm->exists($filename)) {
 
 					    DebugPrinter::log("File: `%s`", $file);
