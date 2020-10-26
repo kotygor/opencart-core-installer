@@ -220,6 +220,11 @@ class FileJunglist
 							    	if ($installFolder) {
 									    $fsm->mirror($webRootFile, $webRootFolder . '/' . $webRootFileName);
 								    }
+							    	else {
+							    		if (file_exists($webRootFolder . '/' . $webRootFileName )) {
+							    			$fsm->remove($webRootFolder . '/' . $webRootFileName);
+									    }
+								    }
 							    	break;
 							    }
 							    default: {
