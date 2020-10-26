@@ -156,6 +156,8 @@ class Installer extends LibraryInstaller
         PackageInterface $initial,
         PackageInterface $target
     ) {
+	    putenv("DEBUG=true");
+	    putenv("OPENCART_INSTALLER_DEBUG=true");
         $installPath =  $this->composer->getPackage()->getExtra()['opencart-install-dir'];
         $junglist = new FileJunglist;
         $junglist->saveModifiedFiles($installPath);

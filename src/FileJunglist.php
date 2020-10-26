@@ -204,22 +204,27 @@ class FileJunglist
 					    if(!in_array($webRootFileName, $this->ignoredFiles)) {
 					    	if ($webRootFileName == 'system') { // Move storageDir to projectRoot (outside from web-access)
 					    		if(!$fsm->exists($storageFolder)) {
-								    $fsm->rename($webRootFile . '/storage', $storageFolder);
+					    			$fsm->copy($webRootFile . '/storage', $storageFolder);
+//								    $fsm->rename($webRootFile . '/storage', $storageFolder);
 							    }
 					    		else {
 					    			$fsm->mirror($webRootFile . '/storage', $storageFolder);
-					    			$fsm->remove($webRootFile . '/storage');
+//					    			$fsm->remove($webRootFile . '/storage');
 							    }
 
 						    }
-					    	$fsm->rename($webRootFile, $webRootFolder . '/' . $webRootFileName);
+//					    	$fsm->rename($webRootFile, $webRootFolder . '/' . $webRootFileName);
+					    	$fsm->copy($webRootFile, $webRootFolder . '/' . $webRootFileName);
+
 					    }
 				    }
-				    $fsm->rename($file . '/.htaccess.txt', $webRootFolder . '/.htaccess.txt');
+				    if (!$fsm->exists($webRootFolder . '/.htaccess')) {
+					    $fsm->copy($file . '/.htaccess.txt', $webRootFolder . '/.htaccess.txt');
+				    }
 			    }
 		    	else {
 		    		if (!$fsm->exists($filename)) {
-					    $fsm->rename($file, $filename);
+					    $fsm->copy($file, $filename);
 				    }
 		    		else {
 		    			$fsm->mirror($file, $filename);
@@ -228,13 +233,11 @@ class FileJunglist
 		    }
 	    }
 	    if (!$fsm->exists('.gitignore')) {
-		    $fsm->rename($packageFolder . '/.gitignore', '.gitignore');
+		    $fsm->copy($packageFolder . '/.gitignore', '.gitignore');
 	    }
-	    else {
-	    	$fsm->remove($packageFolder . '/.gitignore');
-	    }
-
-
+//	    else {
+//	    	$fsm->remove($packageFolder . '/.gitignore');
+//	    }
     }
 
     /**
