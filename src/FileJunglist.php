@@ -113,8 +113,8 @@ class FileJunglist
     public function restoreModifiedFiles($installPath)
     {
         DebugPrinter::log('Restoring modified items');
-        $tmpRoot = sys_get_temp_dir() . DIRECTORY_SEPARATOR;
-        $installPath = trim($installPath, '\\/') . DIRECTORY_SEPARATOR;
+        $tmpRoot = str_replace('\\', '/', sys_get_temp_dir() . DIRECTORY_SEPARATOR);
+        $installPath = str_replace('\\', '/', trim($installPath, '\\/') . DIRECTORY_SEPARATOR);
         $fsm = new Filesystem;
         DebugPrinter::log(
             'Items to search: %s',
