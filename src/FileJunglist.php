@@ -205,7 +205,7 @@ class FileJunglist
 					    	if ($webRootFileName == 'system') { // Move storageDir to projectRoot (outside from web-access)
 					    		if(!$fsm->exists($storageFolder)) {
 					    			$fsm->copy($webRootFile . '/storage', $storageFolder);
-//								    $fsm->rename($webRootFile . '/storage', $storageFolder);
+								    $fsm->remove($webRootFile . '/storage');
 							    }
 					    		else {
 					    			$fsm->mirror($webRootFile . '/storage', $storageFolder);
@@ -223,10 +223,14 @@ class FileJunglist
 				    }
 			    }
 		    	else {
+				    DebugPrinter::log("Filename: -`%s`-", $filename);
 		    		if (!$fsm->exists($filename)) {
+
+					    DebugPrinter::log("File: `%s`", $file);
 					    $fsm->copy($file, $filename);
 				    }
 		    		else {
+					    DebugPrinter::log("Migrate File: `%s`", $file);
 		    			$fsm->mirror($file, $filename);
 				    }
 			    }
