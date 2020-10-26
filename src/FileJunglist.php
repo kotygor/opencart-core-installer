@@ -203,8 +203,6 @@ class FileJunglist
 				    foreach ($webRootFiles as $webRootFile) {
 				    	$webRootFile = str_replace('\\', '/', $webRootFile);
 				    	$webRootFileName = basename($webRootFile);
-				    	DebugPrinter::log('$webRootFileName = `%s`', $webRootFileName);
-				    	DebugPrinter::log('$webRootFile = `%s`', $webRootFile);
 
 					    if(!in_array($webRootFileName, $this->ignoredFiles)) {
 					    	if ($webRootFileName == 'system') { // Move storageDir to projectRoot (outside from web-access)
@@ -219,7 +217,12 @@ class FileJunglist
 
 						    }
 //					    	$fsm->rename($webRootFile, $webRootFolder . '/' . $webRootFileName);
-					    	$fsm->mirror($webRootFile, $webRootFolder . '/' . $webRootFileName);
+						    if (is_dir($webRootFile)) {
+							    $fsm->mirror($webRootFile, $webRootFolder . '/' . $webRootFileName);
+						    }
+					    	else {
+					    		$fsm->copy($webRootFile, $webRootFolder . '/' . $webRootFileName);
+						    }
 
 					    }
 				    }
