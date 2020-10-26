@@ -201,6 +201,7 @@ class FileJunglist
 
 				    DebugPrinter::log('Moving public files to webRootFolder');
 				    foreach ($webRootFiles as $webRootFile) {
+				    	$webRootFile = str_replace('\\', '/', $webRootFile);
 				    	$webRootFileName = basename($webRootFile);
 				    	DebugPrinter::log('$webRootFileName = `%s`', $webRootFileName);
 				    	DebugPrinter::log('$webRootFile = `%s`', $webRootFile);
