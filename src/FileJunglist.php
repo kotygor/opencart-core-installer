@@ -202,6 +202,8 @@ class FileJunglist
 				    DebugPrinter::log('Moving public files to webRootFolder');
 				    foreach ($webRootFiles as $webRootFile) {
 				    	$webRootFileName = basename($webRootFile);
+				    	DebugPrinter::log('$webRootFileName = `%s`', $webRootFileName);
+				    	DebugPrinter::log('$webRootFile = `%s`', $webRootFile);
 
 					    if(!in_array($webRootFileName, $this->ignoredFiles)) {
 					    	if ($webRootFileName == 'system') { // Move storageDir to projectRoot (outside from web-access)
