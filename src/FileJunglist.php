@@ -221,7 +221,11 @@ class FileJunglist
 									    $fsm->mirror($webRootFile, $webRootFolder . '/' . $webRootFileName);
 								    }
 							    	else {
-							    		if (file_exists($webRootFolder . '/' . $webRootFileName )) {
+							    		if (
+							    			file_exists($webRootFolder . '/' . $webRootFileName )
+									        && file_exists($webRootFolder . '/' . 'config.php')
+									        && filesize($webRootFolder . '/' . 'config.php') > 1
+									    ) {
 							    			$fsm->remove($webRootFolder . '/' . $webRootFileName);
 									    }
 								    }
