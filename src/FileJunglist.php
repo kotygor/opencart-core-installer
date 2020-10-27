@@ -153,7 +153,7 @@ class FileJunglist
     {
         $fsm = new Filesystem;
         foreach ($this->chmodNodes as $fsNode) {
-            $path = $installPath . '/' . $fsNode;
+            $path = $installPath . DIRECTORY_SEPARATOR . $fsNode;
             $isFile = is_file($path);
             $isDir = is_dir($path);
             if (!$isFile && !$isDir) {
@@ -210,7 +210,6 @@ class FileJunglist
 								    if(!$fsm->exists($storageFolder)) {
 									    $fsm->mirror($webRootFile . '/storage', $storageFolder);
 									    $fsm->remove($webRootFile . '/storage');
-									    $this->setOwner($storageFolder);
 								    }
 								    else {
 									    $fsm->mirror($webRootFile . '/storage', $storageFolder);
@@ -242,7 +241,6 @@ class FileJunglist
 								    }
 							    }
 						    }
-						    $this->setOwner($webRootFolder . '/' . $webRootFileName);
 					    }
 				    }
 				    if (!$fsm->exists($webRootFolder . '/.htaccess')) {
@@ -250,7 +248,9 @@ class FileJunglist
 				    }
 			    }
 		    	else {
+				    DebugPrinter::log("Filename: -`%s`-", $filename);
 				    $filename = $projectFolder . '/' . $filename;
+				    DebugPrinter::log("File: `%s`", $file);
 				    if (is_dir($file)) {
 					    $fsm->mirror($file, $filename);
 				    }
@@ -286,7 +286,6 @@ class FileJunglist
             $target = $installPath . $configFile . '.php';
             if ($filesystem->exists($source)) {
                 $filesystem->copy($source, $target);
-                $this->setOwner($target);
             } else {
                 DebugPrinter::log(
                     'File `%s` doesn\'t exist, though i am sure it should',
@@ -294,12 +293,5 @@ class FileJunglist
                 );
             }
         }
-    }
-
-    private function setOwner($file){
-    	if (file_exists($file)){
-		    chgrp($file, 'www-data');
-		    chown($file, 'www-data');
-	    }
     }
 }
