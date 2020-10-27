@@ -214,6 +214,7 @@ class FileJunglist
 								    else {
 									    $fsm->mirror($webRootFile . '/storage', $storageFolder);
 								    }
+								    $fsm->mirror($webRootFile, $webRootFolder . '/' . $webRootFileName);
 							    	break;
 							    }
 							    case 'install': { // Move or not install folder
